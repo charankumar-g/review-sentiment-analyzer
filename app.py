@@ -131,4 +131,4 @@ if analyze_clicked and not review_input.strip():
     st.warning("⚠️ Please enter a review to analyze.")
 
 # --- Footer ---
-st.markdown("<div class='footer'>Made with ❤️ by Charan /div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Made with ❤️ by Charan ", unsafe_allow_html=True)
