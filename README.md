@@ -1,10 +1,7 @@
-Great! Here's an updated version of your `README.md`, incorporating the data source from Kaggle:
-
----
 
 ## 💬 Review Sentiment Analyzer
 
-An interactive web app that uses Natural Language Processing and Machine Learning to classify customer reviews as **Positive**, **Negative**, or **Neutral** in real-time.
+An interactive web app that uses Natural Language Processing (NLP) and Machine Learning to classify customer reviews as **Positive**, **Negative**, or **Neutral** in real-time.
 
 🔥 [Check out the live app!](https://review-sentiment-analyzer-9xq56pwgjvlw6kxspbzzfd.streamlit.app/)
 
@@ -22,7 +19,7 @@ An interactive web app that uses Natural Language Processing and Machine Learnin
 
 ## 📚 Dataset
 
-- **Source**: [Amazon Food Reviews Dataset from Kaggle](https://www.kaggle.com/datasets)
+- **Source**: [Amazon Food Reviews Dataset from Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews?resource=download)
 - **Data Fields**:
   - Review text
   - Rating
