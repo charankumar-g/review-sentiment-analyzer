@@ -1,9 +1,5 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
 import joblib
 
 # Load pre-trained model and vectorizer
@@ -11,7 +7,7 @@ model = joblib.load('sentiment_model.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
 
-# Clean review text
+# --- Clean text function ---
 def clean_text(text):
     text = text.lower()
     text = re.sub(r'https?://\S+|www\.\S+', '', text)
@@ -20,125 +16,111 @@ def clean_text(text):
     return text
 
 
-# 🎨 Inject Custom CSS
+# --- CSS for styling ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
-
-    html, body, [class*="css"] {
-        font-family: 'Rubik', sans-serif;
-        background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
-        color: #222;
-    }
-
-    .main-container {
-        background: rgba(255, 255, 255, 0.65);
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        padding: 40px;
-        margin-top: 30px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-
-    .title {
-        text-align: center;
-        font-size: 40px;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 10px;
-    }
-
-    .subtitle {
-        text-align: center;
-        font-size: 20px;
-        color: #555;
-        margin-bottom: 40px;
-    }
-
-    textarea {
-        font-size: 16px !important;
-        padding: 12px !important;
-        border-radius: 10px !important;
-    }
-
-    .stButton > button {
-        background: linear-gradient(to right, #4CAF50, #2ecc71);
-        color: white;
-        font-size: 16px;
-        padding: 10px 20px;
-        border-radius: 12px;
-        border: none;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .stButton > button:hover {
-        background: linear-gradient(to right, #45a049, #27ae60);
-        transform: scale(1.05);
-    }
-
-    .sentiment-box {
-        font-size: 24px;
-        font-weight: bold;
-        padding: 20px;
-        margin-top: 30px;
-        border-radius: 12px;
-        text-align: center;
-        color: white;
-        animation: fadeIn 1s ease-in-out;
-    }
-
-    .positive {
-        background: linear-gradient(to right, #56ab2f, #a8e063);
-    }
-
-    .negative {
-        background: linear-gradient(to right, #cb2d3e, #ef473a);
-    }
-
-    .neutral {
-        background: linear-gradient(to right, #2193b0, #6dd5ed);
-    }
-
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(20px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
+        body {
+            background-color: #f4f6f8;
+        }
+        .main-title {
+            font-size: 38px;
+            font-weight: bold;
+            background: -webkit-linear-gradient(45deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .sub-title {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        textarea {
+            font-size: 16px !important;
+            padding: 12px !important;
+            line-height: 1.6 !important;
+            border-radius: 12px !important;
+            background-color: #ffffff;
+        }
+        div.stButton > button:first-child {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            font-size: 16px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            transition: 0.3s ease;
+        }
+        div.stButton > button:first-child:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: scale(1.03);
+            color: white;
+        }
+        .positive {
+            background: linear-gradient(90deg, #00c851, #007e33);
+        }
+        .negative {
+            background: linear-gradient(90deg, #ff4444, #cc0000);
+        }
+        .neutral {
+            background: linear-gradient(90deg, #33b5e5, #0099cc);
+        }
+        .sentiment-box {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            margin-top: 25px;
+            display: inline-block;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% {opacity: 0; transform: translateY(10px);}
+            100% {opacity: 1; transform: translateY(0);}
+        }
+        .footer {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 60px;
+            text-align: center;
+        }
     </style>
 """, unsafe_allow_html=True)
 
 
-# 📝 App Header
-st.markdown('<div class="title">📝 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Analyze customer reviews with style and precision</div>', unsafe_allow_html=True)
+# --- Header ---
+st.markdown('<div class="main-title">💬 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Instantly analyze customer reviews with AI-powered sentiment prediction</div>', unsafe_allow_html=True)
+st.markdown("<hr style='border:1px solid #e0e0e0;'>", unsafe_allow_html=True)
 
-st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-# 🗣️ Input
-review_input = st.text_area("💬 Enter a customer review:")
+# --- Input ---
+review_input = st.text_area("Write your review here:")
 
-# 🔍 Predict
+
+# --- Prediction + Dynamic Result Style ---
 if st.button("Analyze Sentiment"):
-    if review_input:
-        cleaned_review = clean_text(review_input)
-        review_vectorized = vectorizer.transform([cleaned_review])
-        prediction = model.predict(review_vectorized)
-        sentiment = prediction[0]
+    if review_input.strip():
+        cleaned = clean_text(review_input)
+        vectorized = vectorizer.transform([cleaned])
+        prediction = model.predict(vectorized)[0]
 
-        # 🎨 Colorful Output Box
-        emoji = {"positive": "😊", "negative": "😞", "neutral": "😐"}
-        style_class = {
-            "positive": "positive",
-            "negative": "negative",
-            "neutral": "neutral"
-        }
+        # Determine sentiment class for styling
+        css_class = {
+            'positive': 'positive',
+            'negative': 'negative',
+            'neutral': 'neutral'
+        }.get(prediction.lower(), 'neutral')
 
-        st.markdown(f"""
-            <div class="sentiment-box {style_class[sentiment]}">
-                {emoji[sentiment]} Sentiment: {sentiment.capitalize()}
-            </div>
-        """, unsafe_allow_html=True)
+        # Display sentiment with gradient color
+        st.markdown(
+            f"<div class='sentiment-box {css_class}'>Sentiment: {prediction.capitalize()}</div>",
+            unsafe_allow_html=True
+        )
     else:
-        st.warning("Please enter a review before analyzing.")
+        st.warning("⚠️ Please enter a review to analyze.")
 
-st.markdown('</div>', unsafe_allow_html=True)
+
+# --- Footer ---
+st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
