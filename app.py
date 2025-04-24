@@ -71,17 +71,20 @@ st.markdown("""
         .neutral {
             background: linear-gradient(90deg, #33b5e5, #0099cc);
         }
-        .sentiment-inline {
-            font-size: 26px;
-            font-weight: bold;
-            padding: 14px 26px;
-            border-radius: 12px;
-            color: #f1f1f1;
-            display: inline-block;
-            margin-left: 18px;
-            vertical-align: middle;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+    .sentiment-inline {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 14px 45px; /* wider padding for width */
+        min-width: 280px;    /* ensures it stretches horizontally */
+        border-radius: 12px;
+        color: #f1f1f1;
+        display: inline-block;
+        margin-left: 18px;
+        vertical-align: middle;
+        animation: fadeIn 0.5s ease-in-out;
+        text-align: center;
+    }
+
         @keyframes fadeIn {
             0% {opacity: 0; transform: translateY(10px);}
             100% {opacity: 1; transform: translateY(0);}
