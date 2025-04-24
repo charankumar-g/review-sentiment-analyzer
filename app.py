@@ -1,46 +1,83 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
 import joblib
 
-# Load the pre-trained model and vectorizer (adjust path if needed)
-model = joblib.load('sentiment_model.pkl')  # Load your trained model
-vectorizer = joblib.load('tfidf_vectorizer.pkl')  # Load your fitted TF-IDF vectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+
+# Load pre-trained model and vectorizer
+model = joblib.load('sentiment_model.pkl')
+vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
 
-# Function to clean the text (same as your previous code)
+# --- Clean Text Function ---
 def clean_text(text):
     text = text.lower()
-    text = re.sub(r'https?://\S+|www\.\S+', '', text)  # remove URLs
-    text = re.sub(r'<.*?>', '', text)  # remove HTML
-    text = re.sub(r'[^a-z\s]', '', text)  # remove punctuation and numbers
+    text = re.sub(r'https?://\S+|www\.\S+', '', text)
+    text = re.sub(r'<.*?>', '', text)
+    text = re.sub(r'[^a-z\s]', '', text)
     return text
 
 
-# Streamlit app title and description
-st.title('Sentiment Analysis for Customer Reviews')
-st.write('Enter a review and see if it is positive, neutral, or negative.')
+# --- Custom CSS Styling ---
+st.markdown("""
+    <style>
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        .sub-title {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        textarea {
+            font-size: 16px !important;
+            padding: 10px !important;
+            line-height: 1.5 !important;
+        }
+        div.stButton > button:first-child {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        div.stButton > button:first-child:hover {
+            background-color: #45a049;
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-# Text input for user
+
+# --- Header Titles ---
+st.markdown('<div class="main-title">📝 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Analyze customer reviews with smart sentiment classification</div>', unsafe_allow_html=True)
+st.markdown("<hr style='border:1px solid #e0e0e0;'>", unsafe_allow_html=True)
+
+
+# --- Text Input ---
 review_input = st.text_area("Enter a review:")
 
-# Button to predict sentiment
-if st.button('Analyze Sentiment'):
+
+# --- Button and Prediction ---
+submit = st.button("Analyze Sentiment")
+
+if submit:
     if review_input:
         cleaned_review = clean_text(review_input)
-        review_vectorized = vectorizer.transform([cleaned_review])  # Transform the cleaned review
-        prediction = model.predict(review_vectorized)  # Predict sentiment
-
+        review_vectorized = vectorizer.transform([cleaned_review])
+        prediction = model.predict(review_vectorized)
         sentiment = prediction[0]
-        st.write(f"Sentiment: {sentiment.capitalize()}")
+
+        st.markdown(
+            f"<div style='font-size:20px; color:#333; font-weight:bold;'>Sentiment: <span style='color:#4CAF50;'>{sentiment.capitalize()}</span></div>",
+            unsafe_allow_html=True
+        )
     else:
-        st.write("Please enter a review to analyze.")
-
-import joblib
-
-# Save your trained model and vectorizer
-joblib.dump(model, 'sentiment_model.pkl')
-joblib.dump(vectorizer, 'tfidf_vectorizer.pkl')
+        st.warning("⚠️ Please enter a review to analyze.")
