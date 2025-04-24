@@ -44,7 +44,7 @@ st.markdown("""
         }
         div.stButton > button:first-child {
             background: linear-gradient(90deg, #6a11cb, #2575fc);
-            color: white;
+            color: white !important;
             font-size: 16px;
             padding: 12px 28px;
             border: none;
@@ -52,10 +52,15 @@ st.markdown("""
             transition: 0.3s ease;
             font-family: 'Poppins', sans-serif;
         }
+        div.stButton > button:first-child:focus,
+        div.stButton > button:first-child:active {
+            color: white !important;
+            box-shadow: none;
+        }
         div.stButton > button:first-child:hover {
             background: linear-gradient(90deg, #2575fc, #6a11cb);
             transform: scale(1.03);
-            color: white;
+            color: white !important;
         }
         .positive {
             background: linear-gradient(90deg, #00c851, #007e33);
@@ -67,14 +72,19 @@ st.markdown("""
             background: linear-gradient(90deg, #33b5e5, #0099cc);
         }
         .sentiment-inline {
-            font-size: 16px;
+            font-size: 26px;
             font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 10px;
-            color: white;
+            padding: 14px 26px;
+            border-radius: 12px;
+            color: #f1f1f1;
             display: inline-block;
-            margin-left: 15px;
+            margin-left: 18px;
             vertical-align: middle;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% {opacity: 0; transform: translateY(10px);}
+            100% {opacity: 1; transform: translateY(0);}
         }
         .footer {
             font-size: 12px;
