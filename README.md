@@ -84,7 +84,7 @@ app_screenshot.PNG)
 
 ## 🔗 Connect with Me
 
-- [GitHub](https://github.com/charankumar-g)
-- [LinkedIn] (https://www.linkedin.com/in/charan-kumar-g/)
-
+- 🌚 **Author:** Charan Kumar G  
+- 📩 **Email:** [charankumar.career@gmail.com](mailto:charankumar.career@gmail.com)  
+- 🔗 **LinkedIn:** [linkedin.com/in/charankumar-g](https://linkedin.com/in/charankumar-g)
 ---
