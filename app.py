@@ -132,3 +132,14 @@ if analyze_clicked and not review_input.strip():
 
 # --- Footer ---
 st.markdown("<div class='footer'>Made with ❤️ by Charan ", unsafe_allow_html=True)
+<style>
+    ...
+    .footer {
+        font-size: 24px; /* Make the text bigger */
+        color: #555;  /* Lighter color for readability */
+        margin-top: 80px; /* Increase margin for spacing */
+        text-align: center;
+        font-weight: bold;  /* Make it bold */
+    }
+</style>
+
