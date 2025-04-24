@@ -2,15 +2,12 @@ import streamlit as st
 import re
 import joblib
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-
 # Load pre-trained model and vectorizer
 model = joblib.load('sentiment_model.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
 
-# --- Clean Text Function ---
+# --- Text cleaning function ---
 def clean_text(text):
     text = text.lower()
     text = re.sub(r'https?://\S+|www\.\S+', '', text)
@@ -19,13 +16,18 @@ def clean_text(text):
     return text
 
 
-# --- Custom CSS Styling ---
+# --- CSS Styling for modern UI ---
 st.markdown("""
     <style>
+        body {
+            background-color: #f9f9f9;
+        }
         .main-title {
-            font-size: 36px;
+            font-size: 38px;
             font-weight: bold;
-            color: #4CAF50;
+            background: -webkit-linear-gradient(45deg, #ff4b2b, #ff416c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
         }
         .sub-title {
@@ -35,48 +37,57 @@ st.markdown("""
         }
         textarea {
             font-size: 16px !important;
-            padding: 10px !important;
-            line-height: 1.5 !important;
+            padding: 12px !important;
+            line-height: 1.6 !important;
+            border-radius: 10px !important;
         }
         div.stButton > button:first-child {
-            background-color: #4CAF50;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
             color: white;
             font-size: 16px;
-            padding: 10px 24px;
-            border-radius: 8px;
+            padding: 12px 28px;
             border: none;
-            transition: background-color 0.3s ease;
+            border-radius: 12px;
+            transition: 0.3s ease;
         }
         div.stButton > button:first-child:hover {
-            background-color: #45a049;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
             color: white;
+            transform: scale(1.03);
+        }
+        .result-text {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border-left: 6px solid #ff416c;
+            margin-top: 20px;
+            color: #333;
         }
     </style>
 """, unsafe_allow_html=True)
 
 
-# --- Header Titles ---
-st.markdown('<div class="main-title">📝 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Analyze customer reviews with smart sentiment classification</div>', unsafe_allow_html=True)
+# --- Header ---
+st.markdown('<div class="main-title">💬 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Instantly analyze customer reviews with AI-powered sentiment prediction</div>', unsafe_allow_html=True)
 st.markdown("<hr style='border:1px solid #e0e0e0;'>", unsafe_allow_html=True)
 
 
 # --- Text Input ---
-review_input = st.text_area("Enter a review:")
+review_input = st.text_area("Write your review here:")
 
 
-# --- Button and Prediction ---
-submit = st.button("Analyze Sentiment")
-
-if submit:
-    if review_input:
-        cleaned_review = clean_text(review_input)
-        review_vectorized = vectorizer.transform([cleaned_review])
-        prediction = model.predict(review_vectorized)
-        sentiment = prediction[0]
+# --- Prediction ---
+if st.button("Analyze Sentiment"):
+    if review_input.strip():
+        cleaned = clean_text(review_input)
+        vectorized = vectorizer.transform([cleaned])
+        prediction = model.predict(vectorized)[0]
 
         st.markdown(
-            f"<div style='font-size:20px; color:#333; font-weight:bold;'>Sentiment: <span style='color:#4CAF50;'>{sentiment.capitalize()}</span></div>",
+            f"<div class='result-text'>Sentiment: <span style='color:#ff4b2b'>{prediction.capitalize()}</span></div>",
             unsafe_allow_html=True
         )
     else:
