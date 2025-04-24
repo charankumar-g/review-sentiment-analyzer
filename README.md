@@ -34,7 +34,8 @@ An interactive web app that uses Natural Language Processing and Machine Learnin
 
 ## 🖼️ Preview
 
-![App Screenshot](app_screenshot.png)
+![App Screenshot](
+app_screenshot.PNG)
 
 ---
 
