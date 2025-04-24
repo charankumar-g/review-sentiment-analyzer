@@ -6,7 +6,6 @@ import joblib
 model = joblib.load('sentiment_model.pkl')
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 
-
 # --- Clean text function ---
 def clean_text(text):
     text = text.lower()
@@ -15,10 +14,11 @@ def clean_text(text):
     text = re.sub(r'[^a-z\s]', '', text)
     return text
 
-
 # --- CSS for styling ---
 st.markdown("""
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
         body {
             background-color: #f4f6f8;
         }
@@ -50,6 +50,7 @@ st.markdown("""
             border: none;
             border-radius: 12px;
             transition: 0.3s ease;
+            font-family: 'Poppins', sans-serif;
         }
         div.stButton > button:first-child:hover {
             background: linear-gradient(90deg, #2575fc, #6a11cb);
@@ -65,19 +66,15 @@ st.markdown("""
         .neutral {
             background: linear-gradient(90deg, #33b5e5, #0099cc);
         }
-        .sentiment-box {
-            font-size: 22px;
+        .sentiment-inline {
+            font-size: 16px;
             font-weight: bold;
-            padding: 15px 25px;
+            padding: 10px 20px;
             border-radius: 10px;
             color: white;
-            margin-top: 25px;
             display: inline-block;
-            animation: fadeIn 0.6s ease-in-out;
-        }
-        @keyframes fadeIn {
-            0% {opacity: 0; transform: translateY(10px);}
-            100% {opacity: 1; transform: translateY(0);}
+            margin-left: 15px;
+            vertical-align: middle;
         }
         .footer {
             font-size: 12px;
@@ -88,39 +85,37 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # --- Header ---
 st.markdown('<div class="main-title">💬 Review Sentiment Analyzer</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Instantly analyze customer reviews with AI-powered sentiment prediction</div>', unsafe_allow_html=True)
 st.markdown("<hr style='border:1px solid #e0e0e0;'>", unsafe_allow_html=True)
 
-
 # --- Input ---
 review_input = st.text_area("Write your review here:")
 
+# --- Button and Result Side-by-Side Layout ---
+col1, col2 = st.columns([1, 2])
+with col1:
+    analyze_clicked = st.button("Analyze Sentiment")
 
-# --- Prediction + Dynamic Result Style ---
-if st.button("Analyze Sentiment"):
-    if review_input.strip():
+with col2:
+    if analyze_clicked and review_input.strip():
         cleaned = clean_text(review_input)
         vectorized = vectorizer.transform([cleaned])
         prediction = model.predict(vectorized)[0]
 
-        # Determine sentiment class for styling
-        css_class = {
+        # Style based on prediction
+        sentiment_class = {
             'positive': 'positive',
             'negative': 'negative',
             'neutral': 'neutral'
         }.get(prediction.lower(), 'neutral')
 
-        # Display sentiment with gradient color
-        st.markdown(
-            f"<div class='sentiment-box {css_class}'>Sentiment: {prediction.capitalize()}</div>",
-            unsafe_allow_html=True
-        )
-    else:
-        st.warning("⚠️ Please enter a review to analyze.")
+        # Display inline beside button
+        st.markdown(f"<div class='sentiment-inline {sentiment_class}'>Sentiment: {prediction.capitalize()}</div>", unsafe_allow_html=True)
 
+if analyze_clicked and not review_input.strip():
+    st.warning("⚠️ Please enter a review to analyze.")
 
 # --- Footer ---
 st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
